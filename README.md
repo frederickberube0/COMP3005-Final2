@@ -1,5 +1,7 @@
 Relational Database Schema: https://drive.google.com/file/d/1PcRSKCuXbFDdfpB90IunBriXVatrEfAx/view?usp=sharing
+
 Entity Relationship: https://drive.google.com/file/d/15S4-Cp30zAx6cSbJuGvORABpQvmakh2B/view?usp=sharing
+
 Youtube video: https://youtu.be/rP7uBgN46z0
 
 Admin/staff premade accounts. You can login to any of the existing users
