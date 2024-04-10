@@ -43,7 +43,7 @@ def create_new_group_class(conn): #Might modify to add a class title perhaps? Li
         return
     trainer_id = available_trainers[0]
 
-    with conn.cursor() as cur: #Review the query here
+    with conn.cursor() as cur: 
         query = """ 
         INSERT INTO Event (date, time, room_id, trainer_id, type) 
         VALUES (%s, %s, %s, %s, 'Group')

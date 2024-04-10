@@ -1,4 +1,3 @@
--- Users Table
 CREATE TABLE Users (
     email VARCHAR(255) PRIMARY KEY,
     id SERIAL UNIQUE,
@@ -7,14 +6,12 @@ CREATE TABLE Users (
     picture_link VARCHAR(255)
 );
 
--- Trainers Table
 CREATE TABLE Trainers (
     id INT PRIMARY KEY REFERENCES Users(id),
     name VARCHAR(255) NOT NULL,
     specialization TEXT
 );
 
--- Members Table
 CREATE TABLE Members (
     id INT PRIMARY KEY REFERENCES Users(id),
     name VARCHAR(255) NOT NULL,
@@ -32,13 +29,11 @@ CREATE TABLE Trainer_Availiblity (
     PRIMARY KEY (id, day_of_week)
 );
 
--- Admin Table
 CREATE TABLE Admin (
     id INT PRIMARY KEY REFERENCES Users(id),
     name VARCHAR(255) NOT NULL
 );
 
--- Health Metrics Table
 CREATE TABLE Health_Metrics (
     member_id INT PRIMARY KEY REFERENCES Members(id),
     height DECIMAL,
@@ -48,7 +43,6 @@ CREATE TABLE Health_Metrics (
     strength_importance INT
 );
 
--- Equipment Table
 CREATE TABLE Equipment (
     equipment_id SERIAL PRIMARY KEY,
     equipment_name VARCHAR(255) NOT NULL
@@ -62,7 +56,6 @@ CREATE TABLE Maintenance_Schedule (
     PRIMARY KEY (id, day_of_week)
 );
 
--- Room Table
 CREATE TABLE Room (
     id SERIAL PRIMARY KEY,
     number INT,
@@ -78,7 +71,6 @@ CREATE TABLE Room_Availability (
 );
 
 
--- Event Table
 CREATE TABLE Event (
     event_id SERIAL PRIMARY KEY,
     title VARCHAR(255),
@@ -89,14 +81,12 @@ CREATE TABLE Event (
     type VARCHAR(10) CHECK (type IN ('Group', 'Individual'))
 );
 
--- Attendees Table
 CREATE TABLE Attendees (
     attendee_id INT REFERENCES Members(id),
     event_id INT REFERENCES Event(event_id),
     PRIMARY KEY (attendee_id, event_id)
 );
 
--- Payments Table
 CREATE TABLE Payments (
     payment_id SERIAL PRIMARY KEY,
     member_id INT REFERENCES Members(id),
