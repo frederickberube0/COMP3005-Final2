@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Equipment Maintenance</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto py-8">
+        <div class="flex justify-between items-center mb-4">
+            <h1 class="text-2xl font-semibold">Equipment Maintenance Monitoring</h1>
+            <button onclick="location.href='{{ url_for('admin_dashboard') }}'"
+                class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">Back to Dashboard</button>
+        </div>
+        <div class="flex mb-4">
+            <button onclick="location.href='{{ url_for('add_equipment_form') }}'" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                Add Equipment
+            </button>
+
+            <form action="{{ url_for('maintenance') }}" method="get" class="ml-4">
+                <select name="day_of_week" class="form-select rounded">
+                    <option value="">Select a Day</option>
+                    <option value="Monday">Monday</option>
+                    <option value="Tuesday">Tuesday</option>
+                    <option value="Wednesday">Wednesday</option>
+                    <option value="Thursday">Thursday</option>
+                    <option value="Friday">Friday</option>
+                    <option value="Saturday">Saturday</option>
+                    <option value="Sunday">Sunday</option>
+                </select>
+                <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-2">
+                    Filter
+                </button>
+            </form>
+        </div>
+
+        <div class="bg-white shadow rounded-lg p-6">
+            <ul>
+            {% for equipment in equipments %}
+            <li class="p-2 border-b border-gray-200 flex justify-between">
+                <div>
+                    <strong>{{ equipment.equipment_name }}</strong> - Maintenance: <em>Every {{ equipment.frequency }}</em>
+                    on <em>{{ equipment.day_of_week }}</em> at <em>{{ equipment.time }}</em>
+                </div>
+                <form action="{{ url_for('delete_equipment', equipment_id=equipment.equipment_id) }}" method="post">
+                    <input type="hidden" name="equipment_id" value="{{ equipment.equipment_id }}">
+                    <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded" onclick="return confirm('Are you sure?');">
+                        Delete
+                    </button>
+                </form>
+            </li>
+            {% endfor %}
+
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

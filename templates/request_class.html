@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta viewport="width=device-width, initial-scale=1.0">
+    <title>Request Class</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gradient-to-r from-green-400 to-blue-500 min-h-screen">
+    <div class="flex min-h-screen justify-center items-center">
+        <div class="bg-white p-8 rounded-lg shadow-lg">
+            <h1 class="text-2xl font-semibold mb-4">Request a Class</h1>
+            <form action="/request_class" method="POST">
+                <div class="mb-4">
+                    <label for="class_date" class="block text-gray-700">Class Date:</label>
+                    <input type="date" id="class_date" name="class_date" class="form-input mt-1 block w-full" required>
+                </div>
+                <div class="mb-4">
+                    <label for="class_time" class="block text-gray-700">Class Time:</label>
+                    <input type="time" id="class_time" name="class_time" class="form-input mt-1 block w-full" required>
+                </div>
+                <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Submit</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

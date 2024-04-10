@@ -1,0 +1,233 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Member Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-gradient-to-r from-green-400 to-blue-500 min-h-screen">
+    <div class="flex min-h-screen">
+        <div class="bg-white w-64 p-5 shadow-lg">
+            <div class="flex flex-col items-center">
+                <img class="h-32 w-32 rounded-full object-cover" src="{{ url_for('static', filename=picture_link) }}"
+                    alt="Profile avatar">
+                <h2 class="mt-4 text-xl font-semibold text-gray-800">{{ member_name or 'Member' }}</h2>
+                <p class="text-gray-600">Member Role</p>
+            </div>
+        </div>
+        <div class="flex-grow bg-gray-100 p-8">
+            <nav class="bg-white shadow mb-8 p-4 rounded-lg flex justify-between items-center">
+                <h1 class="text-xl font-semibold text-gray-800">Member Dashboard</h1>
+                <div>
+                    <a href="/class_scheduler"
+                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2">Request a
+                        Class</a>
+                    <a href="/register_group_class"
+                        class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-2">Register for
+                        Group Classes</a>
+                    <a href="/logout"
+                        class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Logout</a>
+                </div>
+            </nav>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <div class="bg-white p-6 shadow rounded-lg">
+                    <h2 class="text-lg font-semibold mb-4">
+                        Health Stats
+                        <a href="{{ url_for('edit_health_info') }}"
+                            class="text-blue-500 hover:text-blue-700 float-right">Edit</a>
+                    </h2>
+                    {% if health_metrics %}
+                    <ul class="space-y-2">
+                        <li>Height: <strong>{{ health_metrics[0] }} cm</strong></li>
+                        <li>Weight: <strong>{{ health_metrics[1] }} lbs</strong></li>
+                        <li>Desired Weight: <strong>{{ health_metrics[2] }} lbs</strong></li>
+                        <li>Endurance Importance: <strong>{{ health_metrics[3] }}</strong></li>
+                        <li>Strength Importance: <strong>{{ health_metrics[4] }}</strong></li>
+                    </ul>
+                    {% else %}
+                    <p>No health metrics found.</p>
+                    {% endif %}
+                </div>
+                <div class="bg-white p-6 shadow rounded-lg">
+                    <h2 class="text-lg font-semibold mb-4">Upcoming Classes</h2>
+                    {% if upcoming_classes %}
+                    <ul class="space-y-2">
+                        {% for class in upcoming_classes %}
+                        <li
+                            class="p-2 bg-gray-100 rounded hover:bg-gray-200 transition-colors flex justify-between items-center">
+                            <div>
+                                <strong>{{ class.day }} {{ class.time }}</strong> - {{class.title}} - Trainer: {{
+                                class.trainer_name }}, Room: {{ class.room_number }}
+                            </div>
+                            <form action="{{ url_for('cancel_class', event_id=class.event_id) }}" method="post">
+                                <button type="submit" class="text-red-500 hover:text-red-700">Cancel</button>
+                            </form>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <div class="border border-gray-200 rounded-lg h-64 flex justify-center items-center">
+                        <p class="text-gray-500">No upcoming classes scheduled.</p>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="bg-white p-6 shadow rounded-lg lg:col-span-1">
+                    <h2 class="text-lg font-semibold mb-4">Set New Preferred Trainer</h2>
+                    <input type="text" id="trainerSearch" placeholder="Type to search for trainers..."
+                        class="border border-gray-200 rounded-lg p-2 w-full">
+                    <div id="trainerResults" class="mt-4"></div>
+                </div>
+                <div class="bg-white p-6 shadow rounded-lg lg:col-span-2">
+                    <h2 class="text-lg font-semibold mb-4">Routine Management</h2>
+                    
+                    <!-- Add Exercise Section -->
+                    <form action="{{ url_for('add_exercise_to_routine') }}" method="post" class="mb-4">
+                        <h3 class="text-md font-semibold mb-2">Add Exercise:</h3>
+                        <div class="mb-4">
+                            <label for="exercise_name" class="block text-sm font-medium text-gray-700">Exercise Name:</label>
+                            <input type="text" id="exercise_name" name="exercise_name" required
+                                   class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" placeholder="Enter exercise name">
+                        </div>
+                        <!-- Day Type Selection -->
+                        <div class="mb-4">
+                            <label for="day_type" class="block text-sm font-medium text-gray-700">Day Type:</label>
+                            <select id="day_type" name="day_type" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" required>
+                                <option value="Push Day">Push Day</option>
+                                <option value="Pull Day">Pull Day</option>
+                                <option value="Leg Day">Leg Day</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="reps" class="block text-sm font-medium text-gray-700">Reps:</label>
+                            <input type="number" id="reps" name="reps" required
+                                   class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" placeholder="Enter number of reps">
+                        </div>
+                        <div class="mb-4">
+                            <label for="sets" class="block text-sm font-medium text-gray-700">Sets:</label>
+                            <input type="number" id="sets" name="sets" required
+                                   class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" placeholder="Enter number of sets">
+                        </div>
+                        <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                            Add Exercise
+                        </button>
+                    </form>
+                    <div class="flex-grow bg-gray-100 p-8">
+                        <div class="grid grid-cols-3 gap-4">
+                            <!-- Push Day Exercises -->
+                            <div class="bg-white p-6 shadow rounded-lg">
+                                <h2 class="text-lg font-semibold mb-4">Push Day Exercises</h2>
+                                {% if exercises_by_day_type['Push Day'] %}
+                                <ul class="space-y-2">
+                                    {% for exercise in exercises_by_day_type['Push Day'] %}
+                                    <li>{{ exercise.name }}: {{ exercise.reps }} reps, {{ exercise.sets }} sets
+                                        <form action="{{ url_for('delete_exercise_from_routine') }}" method="post" style="display:inline;">
+                                            <input type="hidden" name="routine_exercise_id" value="{{ exercise.routine_exercise_id }}">
+                                            <button type="submit" class="text-red-500 hover:text-red-700">Delete</button>
+                                        </form>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                                {% else %}
+                                <p>No Push Day exercises found.</p>
+                                {% endif %}
+                            </div>
+                    
+                            <!-- Pull Day Exercises -->
+                            <div class="bg-white p-6 shadow rounded-lg">
+                                <h2 class="text-lg font-semibold mb-4">Pull Day Exercises</h2>
+                                {% if exercises_by_day_type['Pull Day'] %}
+                                <ul class="space-y-2">
+                                    {% for exercise in exercises_by_day_type['Pull Day'] %}
+                                    <li>{{ exercise.name }}: {{ exercise.reps }} reps, {{ exercise.sets }} sets
+                                        <form action="{{ url_for('delete_exercise_from_routine') }}" method="post" style="display:inline;">
+                                            <input type="hidden" name="routine_exercise_id" value="{{ exercise.routine_exercise_id }}">
+                                            <button type="submit" class="text-red-500 hover:text-red-700">Delete</button>
+                                        </form>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                                {% else %}
+                                <p>No Pull Day exercises found.</p>
+                                {% endif %}
+                            </div>
+                    
+                            <!-- Leg Day Exercises -->
+                            <div class="bg-white p-6 shadow rounded-lg">
+                                <h2 class="text-lg font-semibold mb-4">Leg Day Exercises</h2>
+                                {% if exercises_by_day_type['Leg Day'] %}
+                                <ul class="space-y-2">
+                                    {% for exercise in exercises_by_day_type['Leg Day'] %}
+                                    <li>{{ exercise.name }}: {{ exercise.reps }} reps, {{ exercise.sets }} sets
+                                        <form action="{{ url_for('delete_exercise_from_routine') }}" method="post" style="display:inline;">
+                                            <input type="hidden" name="routine_exercise_id" value="{{ exercise.routine_exercise_id }}">
+                                            <button type="submit" class="text-red-500 hover:text-red-700">Delete</button>
+                                        </form>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                                {% else %}
+                                <p>No Leg Day exercises found.</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('trainerSearch').addEventListener('input', function () {
+            var inputVal = this.value;
+            fetch(`/search_trainers?query=${inputVal}`)
+                .then(response => response.json())
+                .then(data => {
+                    var resultsContainer = document.getElementById('trainerResults');
+                    resultsContainer.innerHTML = ''; 
+
+                    data.forEach(trainer => {
+                        resultsContainer.innerHTML += `
+                        <div class="search-result-item flex items-center my-2 bg-gray-100 hover:bg-gray-200 p-2 rounded-lg cursor-pointer" id="${trainer.id}">
+                            <img class="h-10 w-10 rounded-full object-cover mr-2" src="/static/${trainer.picture_link}" alt="Trainer avatar">
+                            <span>${trainer.name}</span>
+                        </div>
+                    `;
+                    });
+
+                    document.querySelectorAll('.search-result-item').forEach(item => {
+                        item.addEventListener('click', function () {
+                            document.querySelectorAll('.search-result-item').forEach(i => i.style.backgroundColor = '');
+                            this.style.backgroundColor = '#f3f4f6';
+
+                            const trainerId = this.getAttribute('id');
+
+                            fetch('/set_preferred_trainer', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({ trainerId: trainerId })
+                            })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.error) {
+                                        alert('Failed to set preferred trainer: ' + data.error);
+                                    } else {
+                                        alert('Preferred trainer updated successfully.');
+                                        window.location.href = '/member_dashboard';
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error('Error:', error);
+                                    alert('Error updating preferred trainer: ' + error);
+                                });
+                        });
+                    });
+                });
+        });
+    </script>
+</body>

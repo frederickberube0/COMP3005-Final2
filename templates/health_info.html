@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta viewport="width=device-width, initial-scale=1.0">
+  <title>Health Information</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-gradient-to-r from-green-400 to-blue-500 min-h-screen flex justify-center items-center">
+  <div class="w-full max-w-md">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="mb-4 px-4 py-3">
+      {% for category, message in messages %}
+      <div
+        class="bg-{{ category }}-100 border-t-4 border-{{ category }}-500 rounded-b text-{{ category }}-900 px-4 py-3 shadow-md"
+        role="alert">
+        <div class="flex">
+          <div class="py-1"><svg class="fill-current h-6 w-6 text-{{ category }}-500 mr-4"
+              xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+              <path
+                d="M8.707 10.707l1.146 1.146L10 11l-.707-.707zm-.707-.707L7.146 9.146 7 9l.707.707zM10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm0-2a6 6 0 1 1 0-12 6 6 0 0 1 0 12zm-.707-10.707l4 4-1.414 1.414-4-4 1.414-1.414zM9 9h2v2H9V9z" />
+            </svg></div>
+          <div>
+            <p class="font-bold">Alert</p>
+            <p class="text-sm">{{ message }}</p>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+    <form class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" action="/submit_health_info" method="POST">
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="age">Age</label>
+        <input
+          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          id="age" name="age" type="number" placeholder="Age" required min="1" max="130">
+      </div>
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="gender">Gender</label>
+        <select
+          class="shadow border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+          id="gender" name="gender">
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+        </select>
+      </div>
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="height">Height (cm)</label>
+        <input
+          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          id="height" name="height" type="number" placeholder="Height in cm" required min="0" max="250">
+      </div>
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="weight">Weight (lb)</label>
+        <input
+          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          id="weight" name="weight" type="number" placeholder="Weight in lb" required min="0" max="999">
+      </div>
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="dweight">Desired Weight (lb)</label>
+        <input
+          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          id="dweight" name="dweight" type="number" placeholder="Weight in lb" required min="0" max="999">
+      </div>
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="cardio">Importance of Cardio (1-5)</label>
+        <input
+          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          id="cardio" name="cardio" type="number" placeholder="1-5" required min="1" max="5">
+      </div>
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="strength">Importance of Strength (1-5)</label>
+        <input
+          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          id="strength" name="strength" type="number" placeholder="1-5" required min="1" max="5">
+      </div>
+      <div class="flex items-center justify-between">
+        <button
+          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          type="submit">
+          Submit Health Info
+        </button>
+      </div>
+    </form>
+  </div>
+</body>
+
+</html>

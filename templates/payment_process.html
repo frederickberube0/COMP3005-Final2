@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Processing</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-gray-100">
+    <div class="container mx-auto px-4 py-10">
+        <div class="max-w-md mx-auto bg-white rounded-lg overflow-hidden md:max-w-lg">
+            <div class="md:flex">
+                <div class="w-full p-3">
+                    <div class="relative">
+                        <h1 class="text-2xl font-bold text-center mb-4">Class Payment</h1>
+                        <form id="paymentForm">
+                            <div class="mb-4">
+                                <label for="credit_card_number"
+                                    class="block text-gray-700 text-sm font-bold mb-2">Credit Card Number:</label>
+                                <input type="text" id="credit_card_number" name="credit_card_number"
+                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    required>
+                            </div>
+                            <div class="mb-4">
+                                <label for="cvv" class="block text-gray-700 text-sm font-bold mb-2">CVV:</label>
+                                <input type="text" id="cvv" name="cvv"
+                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    required>
+                            </div>
+                            <div class="mb-6">
+                                <button type="submit"
+                                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full">Submit
+                                    Payment</button>
+                            </div>
+                        </form>
+                        <div class="flex justify-center mt-4">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/a/ac/Old_Visa_Logo.svg"
+                                alt="Visa Logo" class="h-8 mr-4">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/b/b7/MasterCard_Logo.svg"
+                                alt="Mastercard Logo" class="h-8">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    document.getElementById('paymentForm').addEventListener('submit', function (event) {
+        event.preventDefault(); 
+
+        const event_id = {{ event_id }};
+
+    fetch(`/process_payment`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            event_id: event_id,
+            credit_card_number: document.getElementById('credit_card_number').value,
+            cvv: document.getElementById('cvv').value,
+            price_paid: 50 
+        })
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Payment processed successfully. Transaction ID: ' + data.payment_id);
+                window.location.href = '/member_dashboard'; 
+            } else {
+                alert('Payment failed: ' + data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error processing payment: ' + error.message);
+        });
+});
+    </script>
+</body>
+
+</html>

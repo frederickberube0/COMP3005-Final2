@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trainer Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<style>
+    .search-result-item {
+        cursor: default;
+        transition: transform 0.1s, background-color 0.1s;
+    }
+
+    .search-result-item:active {
+        transform: scale(0.95);
+    }
+</style>
+
+<body class="bg-gradient-to-r from-green-400 to-blue-500 min-h-screen">
+    <div class="flex min-h-screen">
+        <div class="bg-white w-64 p-5 shadow-lg">
+            <div class="flex flex-col items-center">
+                <img class="h-32 w-32 rounded-full object-cover" src="{{ url_for('static', filename=image_link) }}"
+                    alt="Profile avatar">
+                <h2 class="mt-4 text-xl font-semibold text-gray-800">{{ member_name or 'Trainer' }}</h2>
+                <p class="text-gray-600">Trainer Role</p>
+            </div>
+        </div>
+
+        <div class="flex-grow bg-gray-100 p-8">
+            <nav class="bg-white shadow mb-8 p-4 rounded-lg flex justify-between items-center">
+                <h1 class="text-xl font-semibold text-gray-800">Trainer Dashboard</h1>
+                <div>
+                    <a href="/availability"
+                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-4">Change
+                        Availability</a>
+                    <a href="/logout"
+                        class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Logout</a>
+                </div>
+            </nav>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                <div class="bg-white p-6 shadow rounded-lg lg:col-span-1">
+                    <h2 class="text-lg font-semibold mb-4">Search for Members</h2>
+                    <input type="text" id="memberSearch" placeholder="Type to search..."
+                        class="border border-gray-200 rounded-lg p-2 w-full">
+                    <div id="searchResults" class="mt-4">
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 shadow rounded-lg lg:col-span-2">
+                    <h2 class="text-lg font-semibold mb-4">Weekly Availability</h2>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Time/Day</th>
+                                    {% for day in ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday",
+                                    "Sunday"] %}
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        {{ day }}</th>
+                                    {% endfor %}
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                {% for hour in range(9, 18) %}
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{
+                                        hour|string + ":00" }}</td>
+                                    {% for day in ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday",
+                                    "Sunday"] %}
+                                    {% set hours_list = availability.get(day, []) %}
+                                    <td
+                                        class="{{ 'bg-green-200' if hour in hours_list else 'bg-gray-400' }} px-6 py-4 whitespace-nowrap text-sm text-gray-500 border border-gray-300">
+                                    </td>
+                                    {% endfor %}
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            document.getElementById('memberSearch').addEventListener('input', function () {
+                var inputVal = this.value; 
+
+                fetch(`/search_members?query=${inputVal}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        var resultsContainer = document.getElementById('searchResults');
+                        resultsContainer.innerHTML = ''; 
+
+                        data.forEach(member => {
+                            console.log(member)
+                            resultsContainer.innerHTML += `
+                                    <div class="search-result-item flex items-center my-2 bg-gray-100 hover:bg-gray-200 p-2 rounded-lg items-center my-2" id=${member.id}>
+                                        <img class="h-10 w-10 rounded-full object-cover mr-2" src="/static/${member.picture_link}" alt="Profile avatar">
+                                        <span>${member.name}</span>
+                                    </div>
+                                `;
+                        });
+                        const searchResultItems = document.querySelectorAll('.search-result-item');
+
+                        searchResultItems.forEach(item => {
+                            item.addEventListener('click', function () {
+                                this.style.backgroundColor = '#f3f4f6'; 
+                                setTimeout(() => { this.style.backgroundColor = ''; }, 200); 
+
+                                const memberId = this.getAttribute('id');
+                                window.location.href = `/member_dashboard_from_trainer/${memberId}`;
+                            });
+                        });
+                    });
+            });
+
+
+        </script>
+</body>
+
+</html>

@@ -1,0 +1,28 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta viewport="width=device-width, initial-scale=1.0">
+    <title>Register for Group Classes</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto py-8">
+        <h1 class="text-2xl font-semibold mb-4">Group Classes</h1>
+        <div class="bg-white shadow rounded-lg p-6">
+            <ul>
+                {% for class in group_classes %}
+                <li class="p-2 border-b border-gray-200">
+                  {{class.title}}  {{ class.day_of_week }} {{ class.time }}: {{ class.trainer_name }} (Room {{ class.number }})
+                    <form action="{{ url_for('register_for_class', class_id=class.event_id) }}" method="post">
+                        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded text-sm">
+                            Register
+                        </button>
+                    </form>
+                    
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta viewport="width=device-width, initial-scale=1.0">
+    <title>Member Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-gradient-to-r from-green-400 to-blue-500 min-h-screen">
+    <div class="flex min-h-screen">
+        <div class="bg-white w-64 p-5 shadow-lg">
+            <div class="flex flex-col items-center">
+                <img class="h-32 w-32 rounded-full object-cover" src="{{ url_for('static', filename=image_link) }}"
+                    alt="Profile avatar">
+                <h2 class="mt-4 text-xl font-semibold text-gray-800">{{ member_name or 'Member' }}</h2>
+                <p class="text-gray-600">Member Role</p>
+            </div>
+        </div>
+
+        <div class="flex-grow bg-gray-100 p-8">
+            <nav class="bg-white shadow mb-8 p-4 rounded-lg flex justify-between items-center">
+                <h1 class="text-xl font-semibold text-gray-800">Member Dashboard</h1>
+                <a href="/trainer_dashboard" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                    Return to Trainer Dashboard
+                </a>
+            </nav>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <div class="bg-white p-6 shadow rounded-lg">
+                    <h2 class="text-lg font-semibold mb-4">Health Stats</h2>
+                    {% if health_metrics %}
+                    <ul class="space-y-2">
+                        <li>Height: <strong>{{ health_metrics[0] }} cm</strong></li>
+                        <li>Weight: <strong>{{ health_metrics[1] }} lbs</strong></li>
+                        <li>Desired Weight: <strong>{{ health_metrics[2] }} lbs</strong></li>
+                        <li>Endurance Importance: <strong>{{ health_metrics[3] }}</strong></li>
+                        <li>Strength Importance: <strong>{{ health_metrics[4] }}</strong></li>
+                    </ul>
+                    {% else %}
+                    <p>No health metrics found.</p>
+                    {% endif %}
+                </div>
+
+                <div class="bg-white p-6 shadow rounded-lg">
+                    <h2 class="text-lg font-semibold mb-4">Upcoming Classes</h2>
+                    {% if member_classes %}
+                    <table class="w-full">
+                        <thead>
+                            <tr>
+                                <th class="px-4 py-2">Time</th>
+                                <th class="px-4 py-2">Day</th>
+                                <th class="px-4 py-2">Type</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for time, day, type in member_classes %}
+                            <tr>
+                                <td class="px-4 py-2">{{ time.strftime('%I:%M %p') }}</td>
+                                <td class="px-4 py-2">{{ day }}</td>
+                                <td class="px-4 py-2">{{ type }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% else %}
+                    <p>No upcoming classes found.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

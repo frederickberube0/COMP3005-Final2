@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gradient-to-r from-purple-400 to-pink-500 min-h-screen">
+    <div class="flex min-h-screen">
+        <div class="flex-grow p-10">
+            <div class="flex justify-between mb-8">
+                <h1 class="text-2xl font-semibold text-white">Admin Dashboard</h1>
+                <button onclick="location.href='{{ url_for('logout') }}'" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                    Sign Out
+                </button>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bg-white p-6 shadow rounded-lg">
+                    <h2 class="text-lg font-semibold mb-4">Room Booking Management</h2>
+                    <button onclick="location.href='{{ url_for('manage_rooms') }}'" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        Manage Rooms
+                    </button>
+                </div>
+                
+                <div class="bg-white p-6 shadow rounded-lg">
+                    <h2 class="text-lg font-semibold mb-4">Equipment Maintenance Monitoring</h2>
+                    <button onclick="location.href='{{ url_for('maintenance') }}'" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                        Manage Maintenance
+                    </button>
+                </div>
+
+                <div class="bg-white p-6 shadow rounded-lg">
+                    <h2 class="text-lg font-semibold mb-4">Class Schedule Updating</h2>
+                    <button onclick="location.href='{{ url_for('manage_group_classes') }}'" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        Manage Group Classes
+                    </button>
+                </div>
+
+                <div class="bg-white p-6 shadow rounded-lg">
+                    <h2 class="text-lg font-semibold mb-4">Billing and Payment Processing</h2>
+                    <button onclick="location.href='{{ url_for('view_payments') }}'" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        View Payments
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Class Scheduler</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .clickable {
+            cursor: pointer;
+        }
+    
+        .not-clickable {
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-white p-6 shadow rounded-lg lg:col-span-2">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-lg font-semibold">Weekly Availability</h2>
+            <a href="/member_dashboard" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                Return to Dashboard
+            </a>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Time/Day</th>
+                        {% for day in days %}
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            {{ day }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-x divide-gray-200">
+                    {% for hour in hours %}
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ hour|string + ":00"
+                            }}</td>
+                        {% for day in days %}
+                        <td data-day="{{ day }}" data-time="{{ hour|string + ':00' }}"
+                            class="{{ availability[day][hour|string + ':00'] }} px-6 py-4 whitespace-nowrap text-sm text-gray-500 border border-gray-300 {{ 'clickable' if 'bg-green-200' in availability[day][hour|string + ':00'] else 'not-clickable' }}">
+
+                        </td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        document.querySelectorAll('.clickable').forEach(function (cell) {
+            cell.addEventListener('click', function () {
+                const cellClicked = this;
+                const day = cellClicked.getAttribute('data-day');
+                let time = cellClicked.getAttribute('data-time');
+                if (cellClicked.getAttribute('class').includes('not-clickable')) {
+                    return;
+                }
+                fetch('/create_event', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        day: day,
+                        time: time
+                    })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            window.location.href = `/payment/${data.event_id}`; 
+                        } else {
+                            alert('Failed to create event: ' + data.error);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Error creating event: ' + error);
+                    });
+            });
+        });
+    </script>
+
+
+</body>
+
+</html>

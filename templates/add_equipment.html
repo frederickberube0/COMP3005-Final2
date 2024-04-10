@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Equipment</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto py-8">
+        <h1 class="text-2xl font-semibold mb-4">Add New Equipment</h1>
+        <div class="bg-white shadow rounded-lg p-6">
+            <form action="{{ url_for('add_equipment') }}" method="post" class="space-y-4">
+                <div>
+                    <label for="equipment_name" class="block text-gray-700">Equipment Name:</label>
+                    <input type="text" id="equipment_name" name="equipment_name" class="form-input mt-1 block w-full" required>
+                </div>
+                <div>
+                    <label for="frequency" class="block text-gray-700">Maintenance Frequency:</label>
+                    <select id="frequency" name="frequency" class="form-input mt-1 block w-full">
+                        <option value="Daily">Daily</option>
+                        <option value="Weekly">Weekly</option>
+                        <option value="Bi-Weekly">Bi-Weekly</option>
+                        <option value="Monthly">Monthly</option>
+                        <option value="Yearly">Yearly</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="day_of_week" class="block text-gray-700">Day of the Week:</label>
+                    <select id="day_of_week" name="day_of_week" class="form-input mt-1 block w-full">
+                        <option value="Monday">Monday</option>
+                        <option value="Tuesday">Tuesday</option>
+                        <option value="Wednesday">Wednesday</option>
+                        <option value="Thursday">Thursday</option>
+                        <option value="Friday">Friday</option>
+                        <option value="Saturday">Saturday</option>
+                        <option value="Sunday">Sunday</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="time" class="block text-gray-700">Time:</label>
+                    <input type="time" id="time" name="time" class="form-input mt-1 block w-full">
+                </div>
+                <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                    Add Equipment
+                </button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
